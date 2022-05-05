@@ -9,8 +9,6 @@ host: "localhost:8080"
 basePath: "/v1"
 
 tags:
-- name: "Pauta"
-  description: "Pauta de assembleia"
 - name: "Associado"
   description: "Associado votante de uma assembleia"
 - name: "SessaoPauta"
@@ -21,62 +19,6 @@ schemes:
 - "http"
 
 paths:
-  /pauta/{id}:
-    get:
-      tags:
-      - "Pauta"
-      description: "Consulta uma pauta pelo id"
-      operationId: "obterPautaPorId"
-      produces:
-      - "application/json;charset=UTF-8"
-      parameters:
-      - in: path
-        name: id
-        description: "O id da pauta"
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: "Pauta encontrada!"
-          schema:
-            $ref: "#/definitions/Pauta"
-        "400":
-          description: "Argumento(s) inválido(s)!"
-        "404":
-          description: "Pauta não encontrada!"
-          schema:
-            $ref: "#/definitions/Erro"
-        "500":
-          description: "Erro interno de processamento"
-          schema:
-            $ref: "#/definitions/Erro"
-  /pauta:
-    post:
-      tags:
-      - "Pauta"
-      description: "Cria uma pauta"
-      operationId: "criarPauta"
-      consumes:
-      - "application/json;charset=UTF-8"
-      produces:
-      - "application/json;charset=UTF-8"
-      parameters:
-      - in: body
-        name: body
-        description: "Pauta a ser cadastrada"
-        schema:
-          $ref: "#/definitions/Pauta"
-      responses:
-        "201":
-          description: "Pauta criada!"
-          schema:
-            $ref: "#/definitions/Pauta"
-        "400":
-          description: "Argumento(s) inválido(s)!"
-        "500":
-          description: "Erro interno de processamento"
-          schema:
-            $ref: "#/definitions/Erro"
   /associado:
     post:
       tags:
@@ -283,7 +225,7 @@ paths:
           schema:
             $ref: "#/definitions/Erro"
   
-  /votos/{idSessaoPauta}:
+  /votos-apurados/{idSessaoPauta}:
     get:
       tags:
       - "Votacao"
@@ -314,35 +256,6 @@ paths:
             $ref: "#/definitions/Erro"
       
 definitions:
-  Pauta:
-    type: object
-    properties:
-      id:
-        type: integer
-        description: "Número identificador da pauta"
-        example: 1
-      nome:
-        type: string
-        description: "Nome da pauta"
-        example: "Divisão de dividendos"
-      flagAtivo:
-        type: string
-        description: "S se estiver ativo, N caso inativo"
-        example: "S"
-      dataHoraInsercao:
-        type: string
-        format: date-time
-        description: "Data e hora da criação da pauta"
-        example: "2022-04-05T20:43:35:123-03:00"
-      dataHoraAlteracao:
-        type: string
-        format: date-time
-        description: "Data e hora da alteração da pauta"
-        example: "2022-04-05T21:43:35:123-03:00"
-      nomeUsuarioAuditoria:
-        type: string
-        description: "Nome do microsserviço responsável pela inserção/alteração da pauta"
-        example: "springboot-db-assembleia-cooperativa"
   NovoNomeStatus:
     type: object
     properties:
@@ -390,10 +303,10 @@ definitions:
         type: integer
         description: "Número identificador da sessão de votação"
         example: 1
-      idPauta:
-        type: integer
-        description: "Número identificador da pauta"
-        example: 1
+      nomePauta:
+        type: string
+        description: "Nome da pauta"
+        example: "Divisão de dividendos"
       dataHoraInicioSessao:
         type: string
         format: date-time
