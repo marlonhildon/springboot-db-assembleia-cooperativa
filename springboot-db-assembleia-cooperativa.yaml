@@ -1,0 +1,467 @@
+swagger: "2.0"
+info:
+  description: "Contrato referente ao microsserviço de assembleias cooperativistas. Representa a manipulação de pautas, associados e sessões de votação."
+  version: "1.0.0"
+  title: "Assembleia de Cooperativa"
+  contact:
+    email: "marlonhildon@gmail.com"
+host: "localhost:8080"
+basePath: "/v1"
+
+tags:
+- name: "Pauta"
+  description: "Pauta de assembleia"
+- name: "Associado"
+  description: "Associado votante de uma assembleia"
+- name: "SessaoPauta"
+  description: "Sessão de votação envolvendo uma pauta com tempo limite de início e fim de duração para votos"
+- name: "Votacao"
+  description: "Computação de votos de uma assembleia"
+schemes:
+- "http"
+
+paths:
+  /pauta/{id}:
+    get:
+      tags:
+      - "Pauta"
+      description: "Consulta uma pauta pelo id"
+      operationId: "obterPautaPorId"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - in: path
+        name: id
+        description: "O id da pauta"
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: "Pauta encontrada!"
+          schema:
+            $ref: "#/definitions/Pauta"
+        "400":
+          description: "Argumento(s) inválido(s)!"
+        "404":
+          description: "Pauta não encontrada!"
+          schema:
+            $ref: "#/definitions/Erro"
+        "500":
+          description: "Erro interno de processamento"
+          schema:
+            $ref: "#/definitions/Erro"
+  /pauta:
+    post:
+      tags:
+      - "Pauta"
+      description: "Cria uma pauta"
+      operationId: "criarPauta"
+      consumes:
+      - "application/json;charset=UTF-8"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - in: body
+        name: body
+        description: "Pauta a ser cadastrada"
+        schema:
+          $ref: "#/definitions/Pauta"
+      responses:
+        "201":
+          description: "Pauta criada!"
+          schema:
+            $ref: "#/definitions/Pauta"
+        "400":
+          description: "Argumento(s) inválido(s)!"
+        "500":
+          description: "Erro interno de processamento"
+          schema:
+            $ref: "#/definitions/Erro"
+  /associado:
+    post:
+      tags:
+      - "Associado"
+      description: "Cria um associado"
+      operationId: "criarAssociado"
+      consumes:
+      - "application/json;charset=UTF-8"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - in: body
+        name: body
+        description: "Associado a ser cadastrado"
+        schema:
+          $ref: "#/definitions/Associado"
+      responses:
+        "201":
+          description: "Associado criado!"
+          schema:
+            $ref: "#/definitions/Associado"
+        "400":
+          description: "Argumento(s) inválido(s)!"
+        "500":
+          description: "Erro interno de processamento"
+          schema:
+            $ref: "#/definitions/Erro"
+    get:
+      tags:
+      - "Associado"
+      description: "Consulta um associado"
+      operationId: "obterAssociado"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - in: header
+        name: cpf
+        description: "O CPF do associado"
+        required: true
+        type: string
+      responses:
+        "200":
+          description: "Associado encontrado!"
+          schema:
+            $ref: "#/definitions/Associado"
+        "400":
+          description: "Argumento(s) inválido(s)!"
+        "404":
+          description: "Associado não encontrado!"
+          schema:
+            $ref: "#/definitions/Erro"
+        "500":
+          description: "Erro interno de processamento"
+          schema:
+            $ref: "#/definitions/Erro"
+    put:
+      tags:
+      - "Associado"
+      description: "Edita um nome de Associado"
+      operationId: "editarAssociado"
+      consumes:
+      - "application/json;charset=UTF-8"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - in: header
+        name: cpf
+        description: "O cpf do associado"
+        required: true
+        type: integer
+      - in: body
+        name: body
+        description: "Novo nome do associado e status ativo/inativo"
+        schema:
+          $ref: "#/definitions/NovoNomeStatus"
+      responses:
+        "204":
+          description: "Associado editado!"
+          schema:
+            $ref: "#/definitions/ManipulacaoEntidade"
+        "400":
+          description: "Argumento(s) inválido(s)!"
+        "404":
+          description: "Associado não encontrado!"
+          schema:
+            $ref: "#/definitions/Erro"
+        "500":
+          description: "Erro interno de processamento"
+          schema:
+            $ref: "#/definitions/Erro"
+    delete:
+      tags:
+      - "Associado"
+      description: "Apaga logicamente um associado"
+      operationId: "apagarAssociado"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - in: header
+        name: cpf
+        description: "O cpf do associado"
+        required: true
+        type: string
+      responses:
+        "200":
+          description: "Associado apagado!"
+          schema:
+            $ref: "#/definitions/ManipulacaoEntidade"
+        "400":
+          description: "Argumento(s) inválido(s)!"
+        "404":
+          description: "Associado não encontrado!"
+          schema:
+            $ref: "#/definitions/Erro"
+        "500":
+          description: "Erro interno de processamento"
+          schema:
+            $ref: "#/definitions/Erro"
+  /sessao-pauta:
+    post:
+      tags:
+      - "SessaoPauta"
+      description: "Cria uma sessão de votação envolvendo uma pauta"
+      operationId: "criarSessaoPauta"
+      consumes:
+      - "application/json;charset=UTF-8"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - in: body
+        name: body
+        description: "Sessão de Pauta a ser cadastrada"
+        schema:
+          $ref: "#/definitions/SessaoPauta"
+      responses:
+        "201":
+          description: "Sessão de pauta definida!"
+          schema:
+            $ref: "#/definitions/SessaoPauta"
+        "400":
+          description: "Argumento(s) inválido(s)!"
+        "422":
+          description: "Já existe uma sessão em vigor para esta pauta!"
+          schema:
+            $ref: "#/definitions/Erro"
+        "500":
+          description: "Erro interno de processamento"
+          schema:
+            $ref: "#/definitions/Erro"
+  /sessao-pauta/{id}:
+    get:
+      tags:
+      - "SessaoPauta"
+      description: "Obtém a sessão a partir do id"
+      operationId: "obterSessaoPautaPorId"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - in: path
+        name: id
+        required: true
+        description: "Sessão de Pauta a ser consultada"
+        type: integer
+      responses:
+        "200":
+          description: "Sessão de pauta encontrada!"
+          schema:
+            $ref: "#/definitions/SessaoPauta"
+        "400":
+          description: "Argumento(s) inválido(s)!"
+        "500":
+          description: "Erro interno de processamento"
+          schema:
+            $ref: "#/definitions/Erro"
+  /voto:
+    post:
+      tags:
+      - "Votacao"
+      description: "Vota numa sessão"
+      operationId: "votarSessaoPauta"
+      consumes:
+      - "application/json;charset=UTF-8"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - in: body
+        name: body
+        description: "Sessão de Pauta a ser cadastrada"
+        schema:
+          $ref: "#/definitions/Votacao"
+      responses:
+        "201":
+          description: "Voto computado!"
+          schema:
+            $ref: "#/definitions/Votacao"
+        "400":
+          description: "Argumento(s) inválido(s)!"
+        "422":
+          description: "Associado já votou!"
+          schema:
+            $ref: "#/definitions/Erro"
+        "500":
+          description: "Erro interno de processamento"
+          schema:
+            $ref: "#/definitions/Erro"
+  
+  /votos/{idSessaoPauta}:
+    get:
+      tags:
+      - "Votacao"
+      description: "Obtém os votos de uma pauta cuja sessão mais recente esteja encerrada"
+      operationId: "apurarVotosSessao"
+      produces:
+      - "application/json;charset=UTF-8"
+      parameters:
+      - in: path
+        name: idSessaoPauta
+        description: "Número identificador da sessão que foram abertas as votações"
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: "Votos apurados!"
+          schema:
+            $ref: "#/definitions/VotacaoApurada"
+        "400":
+          description: "Argumento(s) inválido(s)!"
+        "422":
+          description: "A sessão ainda está aberta!"
+          schema:
+            $ref: "#/definitions/Erro"
+        "500":
+          description: "Erro interno de processamento"
+          schema:
+            $ref: "#/definitions/Erro"
+      
+definitions:
+  Pauta:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: "Número identificador da pauta"
+        example: 1
+      nome:
+        type: string
+        description: "Nome da pauta"
+        example: "Divisão de dividendos"
+      flagAtivo:
+        type: string
+        description: "S se estiver ativo, N caso inativo"
+        example: "S"
+      dataHoraInsercao:
+        type: string
+        format: date-time
+        description: "Data e hora da criação da pauta"
+        example: "2022-04-05T20:43:35:123-03:00"
+      dataHoraAlteracao:
+        type: string
+        format: date-time
+        description: "Data e hora da alteração da pauta"
+        example: "2022-04-05T21:43:35:123-03:00"
+      nomeUsuarioAuditoria:
+        type: string
+        description: "Nome do microsserviço responsável pela inserção/alteração da pauta"
+        example: "springboot-db-assembleia-cooperativa"
+  NovoNomeStatus:
+    type: object
+    properties:
+      nome:
+        type: string
+        description: "Novo nome a substituir o atual"
+      flagAtivo:
+        type: string
+        description: "S para ativo, N para inativo"
+        example: "N"
+  Associado:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: "Número identificador do associado"
+        example: 1
+      nome:
+        type: string
+        description: "Nome do associado"
+        example: "João das Neves"
+      cpf:
+        type: string
+        description: "CPF do associado"
+        example: "23036874038"
+      flagAtivo:
+        type: string
+        description: "S se estiver ativo, N caso inativo"
+        example: "S"
+      dataHoraInsercao:
+        type: string
+        format: date-time
+        description: "Data e hora de cadastro do associado"
+      dataHoraAlteracao:
+        type: string
+        format: date-time
+      nomeUsuarioAuditoria:
+        type: string
+        description: "Nome do microsserviço responsável pela inserção/alteração da pauta"
+        example: "springboot-db-assembleia-cooperativa"
+  SessaoPauta:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: "Número identificador da sessão de votação"
+        example: 1
+      idPauta:
+        type: integer
+        description: "Número identificador da pauta"
+        example: 1
+      dataHoraInicioSessao:
+        type: string
+        format: date-time
+        description: "Data e hora de início da sessão de votação"
+        example: "2022-04-05T21:43:35:123-03:00"
+      dataHoraFimSessao:
+        type: string
+        format: date-time
+        description: "Data e hora de fim da sessão de votação"
+        example: "2022-04-05T21:44:35:123-03:00"
+      nomeUsuarioAuditoria:
+        type: string
+        description: "Nome do microsserviço responsável pela inserção/alteração da pauta"
+        example: "springboot-db-assembleia-cooperativa"
+  Votacao:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: "Número identificador da votação"
+        example: 1
+      idAssociado:
+        type: integer
+        description: "Número identificador do associado votante"
+        example: 1
+      idSessaoVotacao:
+        type: integer
+        description: "Número identificador da sessão de votação em vigor"
+        example: 1
+      flagVotoAssociado:
+        type: string
+        description: "S para sim, N para não"
+        example: "N"
+  VotacaoApurada:
+    type: object
+    properties:
+      idSessaoPauta:
+        type: integer
+        description: "Número identificador da sessão aberta"
+      idPauta:
+        type: integer
+        description: "Número identificador da pauta"
+      nomePauta:
+        type: string
+        description: "Nome da pauta com sessão aberta"
+      qtdeVotosSim:
+        type: integer
+        description: "Quantidade de votos SIM"
+      qtdeVotosNao:
+        type: integer
+        description: "Quantidade de votos NÃO"
+  ManipulacaoEntidade:
+    type: object
+    properties:
+      mensagem:
+        type: string
+        enum:
+        - EDITADO_SUCESSO
+        - APAGADO_SUCESSO
+        description: "Mensagem retornada nos cenários de criação/edição de uma entidade de BD"
+  Erro:
+    type: object
+    properties:
+      mensagem:
+        type: string
+        description: "Mensagem de erro clara e objetiva"
+        example: "Não encontrado"
+      codigo:
+        type: string
+        description: "Código de erro"
+        example: "PAUTA_NAO_ENCONTRADA"
