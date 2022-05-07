@@ -18,7 +18,6 @@
         <swagger.codegen.ver>2.4.27</swagger.codegen.ver>
         <byte.buddy.ver>1.12.8</byte.buddy.ver>
         <maven.surefire.ver>2.19.1</maven.surefire.ver>
-        <junit.surefire.ver>1.0.1</junit.surefire.ver>
     </properties>
 
     <dependencies>
@@ -57,10 +56,16 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -114,7 +119,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Define o moduló de execução -->
+            <!-- Define o módulo de execução -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -134,7 +139,7 @@
                     <dependency>
                         <groupId>org.junit.platform</groupId>
                         <artifactId>junit-platform-surefire-provider</artifactId>
-                        <version>${junit.surefire.ver}</version>
+                        <version>1.0.1</version>
                     </dependency>
                 </dependencies>
             </plugin>
