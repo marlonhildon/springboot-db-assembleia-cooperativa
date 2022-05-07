@@ -27,6 +27,8 @@
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 		<mockito.ver>4.5.1</mockito.ver>
 		<junit.jupiter.ver>5.8.1</junit.jupiter.ver>
+		<maven.surefire.ver>2.19.1</maven.surefire.ver>
+		<junit.surefire.ver>1.0.1</junit.surefire.ver>
 	</properties>
 
 	<dependencyManagement>
@@ -76,6 +78,12 @@
 				<version>${junit.jupiter.ver}</version>
 				<scope>test</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.junit.platform</groupId>
+				<artifactId>junit-platform-surefire-provider</artifactId>
+				<version>${junit.surefire.ver}</version>
+				<scope>test</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -93,6 +101,7 @@
 	<modules>
 		<module>core</module>
 		<module>service</module>
+		<module>lib</module>
 	</modules>
 
 </project>

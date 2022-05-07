@@ -88,7 +88,7 @@ paths:
         name: cpf
         description: "O cpf do associado"
         required: true
-        type: integer
+        type: string
       - in: body
         name: body
         description: "Novo nome do associado e status ativo/inativo"
@@ -224,7 +224,7 @@ paths:
           description: "Erro interno de processamento"
           schema:
             $ref: "#/definitions/Erro"
-  
+
   /votos-apurados/{idSessaoPauta}:
     get:
       tags:

@@ -1,0 +1,17 @@
+server:
+  port: 8081
+  error:
+    whitelabel:
+      enabled: false
+spring:
+  application:
+    name: assembleia-cooperativa
+  profiles:
+    active: local
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local

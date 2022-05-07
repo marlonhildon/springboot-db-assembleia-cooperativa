@@ -8,10 +8,10 @@ import org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration
  * Classe de inicialização. A exclusão foi realizada para evitar a busca de templates pelo Mustache.
  */
 @SpringBootApplication(exclude = {MustacheAutoConfiguration.class})
-public class SpringbootDbAssembleiaCooperativaApplication {
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringbootDbAssembleiaCooperativaApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 }
