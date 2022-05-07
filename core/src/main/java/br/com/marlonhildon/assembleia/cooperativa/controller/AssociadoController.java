@@ -1,6 +1,7 @@
 package br.com.marlonhildon.assembleia.cooperativa.controller;
 
 import br.com.marlonhildon.assembleia.cooperativa.domain.AssociadoDomain;
+import br.com.marlonhildon.assembleia.cooperativa.domain.NovoNomeStatusDomain;
 import br.com.marlonhildon.assembleia.cooperativa.gerado.api.AssociadoApi;
 import br.com.marlonhildon.assembleia.cooperativa.gerado.model.AssociadoGenerated;
 import br.com.marlonhildon.assembleia.cooperativa.gerado.model.ManipulacaoEntidadeGenerated;
@@ -13,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller para manipulação dos dados do associado.
+ */
 @Slf4j
 @RestController
 @AllArgsConstructor
@@ -23,10 +27,10 @@ public class AssociadoController implements AssociadoApi {
 
     @Override
     public ResponseEntity<ManipulacaoEntidadeGenerated> apagarAssociado(String cpf) {
-        log.info("Teste de log info");
-        log.warn("Teste de log warn");
-        log.error("Teste de log error");
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        log.info("Inicio da remocao logica do associado");
+        associadoService.apagarAssociado(cpf);
+        log.info("Associado apagado com sucesso");
+        return new ResponseEntity<>(new ManipulacaoEntidadeGenerated().mensagem(ManipulacaoEntidadeGenerated.MensagemEnum.APAGADO_SUCESSO), HttpStatus.OK);
     }
 
     @Override
@@ -41,11 +45,19 @@ public class AssociadoController implements AssociadoApi {
 
     @Override
     public ResponseEntity<ManipulacaoEntidadeGenerated> editarAssociado(String cpf, NovoNomeStatusGenerated body) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        log.info("Inicio da edicao de associado");
+        NovoNomeStatusDomain novoNomeStatusGenerated = associadoMapper.paraNovoNomeStatusDomain(body);
+        associadoService.editarAssociado(cpf, novoNomeStatusGenerated);
+        log.info("Associado editado com sucesso");
+        return new ResponseEntity<>(new ManipulacaoEntidadeGenerated().mensagem(ManipulacaoEntidadeGenerated.MensagemEnum.EDITADO_SUCESSO), HttpStatus.NO_CONTENT);
     }
 
     @Override
     public ResponseEntity<AssociadoGenerated> obterAssociado(String cpf) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        log.info("Inicio da consulta de associado");
+        AssociadoDomain associadoConsultadoDomain = associadoService.obterAssociado(cpf);
+        AssociadoGenerated associadoCadastradoGenerated = associadoMapper.paraAssociadoGenerated(associadoConsultadoDomain);
+        log.info("Associado retornado com sucesso");
+        return new ResponseEntity<>(associadoCadastradoGenerated, HttpStatus.OK);
     }
 }

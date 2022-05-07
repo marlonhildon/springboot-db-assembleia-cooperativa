@@ -1,6 +1,7 @@
 package br.com.marlonhildon.assembleia.cooperativa.controller;
 
 import br.com.marlonhildon.assembleia.cooperativa.domain.AssociadoDomain;
+import br.com.marlonhildon.assembleia.cooperativa.domain.NovoNomeStatusDomain;
 import br.com.marlonhildon.assembleia.cooperativa.gerado.model.AssociadoGenerated;
 import br.com.marlonhildon.assembleia.cooperativa.gerado.model.ManipulacaoEntidadeGenerated;
 import br.com.marlonhildon.assembleia.cooperativa.gerado.model.NovoNomeStatusGenerated;
@@ -19,6 +20,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,8 +38,10 @@ class AssociadoControllerTest {
 
     @Test
     void apagarAssociadoTest() {
+        doNothing().when(associadoService).apagarAssociado(Mockito.anyString());
         ResponseEntity<ManipulacaoEntidadeGenerated> respostaController = controller.apagarAssociado(cpfTeste);
-        assertEquals(HttpStatus.NOT_IMPLEMENTED, respostaController.getStatusCode());
+        assertEquals(HttpStatus.OK, respostaController.getStatusCode());
+        assertEquals(ManipulacaoEntidadeGenerated.MensagemEnum.APAGADO_SUCESSO, Objects.requireNonNull(respostaController.getBody()).getMensagem());
     }
 
     @Test
@@ -55,14 +59,25 @@ class AssociadoControllerTest {
 
     @Test
     void editarAssociadoTest() {
+        when(associadoMapper.paraNovoNomeStatusDomain(Mockito.any(NovoNomeStatusGenerated.class))).thenReturn(getNovoNomeStatusDomainMock());
+        doNothing().when(associadoService).editarAssociado(Mockito.anyString(), Mockito.any(NovoNomeStatusDomain.class));
+
         ResponseEntity<ManipulacaoEntidadeGenerated> respostaController = controller.editarAssociado(cpfTeste, getNovoNomeStatusGeneratedMock());
-        assertEquals(HttpStatus.NOT_IMPLEMENTED, respostaController.getStatusCode());
+
+        assertEquals(HttpStatus.NO_CONTENT, respostaController.getStatusCode());
+        assertEquals(ManipulacaoEntidadeGenerated.MensagemEnum.EDITADO_SUCESSO, Objects.requireNonNull(respostaController.getBody()).getMensagem());
     }
 
     @Test
     void obterAssociadoTest() {
+        when(associadoMapper.paraAssociadoGenerated(Mockito.any(AssociadoDomain.class))).thenReturn(getAssociadoGeneratedMock());
+        when(associadoService.obterAssociado(Mockito.anyString())).thenReturn(getAssociadoDomainMock());
+
         ResponseEntity<AssociadoGenerated> respostaController = controller.obterAssociado(cpfTeste);
-        assertEquals(HttpStatus.NOT_IMPLEMENTED, respostaController.getStatusCode());
+
+        assertEquals(HttpStatus.OK, respostaController.getStatusCode());
+        assertNotNull(Objects.requireNonNull(respostaController.getBody()).getCpf());
+        assertNotNull(Objects.requireNonNull(respostaController.getBody().getNome()));
     }
 
     private AssociadoGenerated getAssociadoGeneratedMock() {
@@ -72,15 +87,18 @@ class AssociadoControllerTest {
     }
 
     private AssociadoDomain getAssociadoDomainMock() {
-        AssociadoDomain associadoDomain = AssociadoDomain.builder()
+        return AssociadoDomain.builder()
                 .cpf(cpfTeste)
                 .nome("João das Gemas")
                 .build();
-        return associadoDomain;
     }
 
     private NovoNomeStatusGenerated getNovoNomeStatusGeneratedMock() {
         return new NovoNomeStatusGenerated().nome("João das Claras");
+    }
+
+    private NovoNomeStatusDomain getNovoNomeStatusDomainMock() {
+        return NovoNomeStatusDomain.builder().nome("João dos Ovos").build();
     }
 
 }
