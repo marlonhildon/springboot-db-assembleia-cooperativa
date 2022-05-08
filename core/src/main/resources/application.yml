@@ -15,3 +15,8 @@ spring:
   config:
     activate:
       on-profile: local
+  datasource:
+    url: jdbc:mysql://34.95.144.95:3306/DBAssembleia
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: 'root'
+    password: 'XjY2SV,-KbR@vPO:'

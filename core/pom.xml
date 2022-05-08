@@ -18,6 +18,8 @@
         <swagger.codegen.ver>2.4.27</swagger.codegen.ver>
         <byte.buddy.ver>1.12.8</byte.buddy.ver>
         <maven.surefire.ver>2.19.1</maven.surefire.ver>
+        <jdbi.ver>3.1.0</jdbi.ver>
+        <starter.jdbc.ver>2.6.7</starter.jdbc.ver>
     </properties>
 
     <dependencies>
@@ -83,6 +85,21 @@
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
             <version>${byte.buddy.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-core</artifactId>
+            <version>${jdbi.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-sqlobject</artifactId>
+            <version>${jdbi.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <version>${starter.jdbc.ver}</version>
         </dependency>
     </dependencies>
 
