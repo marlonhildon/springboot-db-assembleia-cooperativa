@@ -1,7 +1,9 @@
 package br.com.marlonhildon.assembleia.cooperativa.config;
 
 import br.com.marlonhildon.assembleia.cooperativa.repository.AssociadoRepository;
+import br.com.marlonhildon.assembleia.cooperativa.repository.SessaoPautaRepository;
 import br.com.marlonhildon.assembleia.cooperativa.repository.impl.AssociadoRepositoryImpl;
+import br.com.marlonhildon.assembleia.cooperativa.repository.impl.SessaoPautaRepositoryImpl;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.spi.JdbiPlugin;
@@ -39,5 +41,10 @@ public class JdbiConfig {
     @Bean
     public AssociadoRepository obterAssociadoRepositoryBean(Jdbi jdbi) {
         return jdbi.onDemand(AssociadoRepositoryImpl.class);
+    }
+
+    @Bean
+    public SessaoPautaRepository obterSessaoPautaRepositoryBean(Jdbi jdbi) {
+        return jdbi.onDemand(SessaoPautaRepositoryImpl.class);
     }
 }

@@ -10,11 +10,12 @@ import org.springframework.http.HttpStatus;
  */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum AssociadoErroEnum {
+public enum AssembleiaErroEnum {
 
-    ASSOCIADO_NAO_ENCONTRADO("O Associado não foi encontrado.", HttpStatus.UNPROCESSABLE_ENTITY),
+    ITEM_NAO_ENCONTRADO("O item informado não foi encontrado.", HttpStatus.UNPROCESSABLE_ENTITY),
     ASSOCIADO_JA_EXISTE("O Associado já existe.", HttpStatus.UNPROCESSABLE_ENTITY),
-    ASSOCIADO_ERRO_INTERNO_BD("Erro interno no Banco de Dados de Associado.", HttpStatus.INTERNAL_SERVER_ERROR);
+    SESSAO_INICIO_FIM_VALIDOS("Insira data e hora válidos para início e fim da sessão.", HttpStatus.UNPROCESSABLE_ENTITY),
+    ERRO_INTERNO_BD("Erro interno no Banco de Dados.", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String mensagemErro;
     private final HttpStatus statusCodeErro;
