@@ -1,6 +1,7 @@
 package br.com.marlonhildon.assembleia.cooperativa.repository.impl;
 
 import br.com.marlonhildon.assembleia.cooperativa.domain.AssociadoDomain;
+import br.com.marlonhildon.assembleia.cooperativa.domain.NovoNomeStatusDomain;
 import br.com.marlonhildon.assembleia.cooperativa.repository.AssociadoRepository;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -20,11 +21,19 @@ public interface AssociadoRepositoryImpl extends AssociadoRepository {
     @Override
     @SqlUpdate
     @GetGeneratedKeys
-    int criarAssociado(@BindBean("associado") AssociadoDomain associadoDomain);
+    Optional<Integer> criarAssociado(@BindBean("associado") AssociadoDomain associadoDomain);
 
     @Override
     @SqlQuery
     @RegisterBeanMapper(AssociadoDomain.class)
     Optional<AssociadoDomain> obterAssociado(@Bind String cpf);
+
+    @Override
+    @SqlUpdate
+    int editarAssociado(@Bind String cpf, @BindBean("associado") NovoNomeStatusDomain body);
+
+    @Override
+    @SqlUpdate
+    int apagarAssociado(@Bind String cpf);
 
 }

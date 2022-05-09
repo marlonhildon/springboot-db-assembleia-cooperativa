@@ -8,3 +8,4 @@ SELECT
     assoc.nomeUsuarioAuditoria
 FROM Associado AS assoc
 WHERE assoc.cpf = :cpf
+AND assoc.flagAtivo = 'S';

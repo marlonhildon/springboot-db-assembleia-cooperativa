@@ -11,8 +11,8 @@ import java.util.Optional;
 public interface AssociadoRepository {
 
     Optional<AssociadoDomain> obterAssociado(String cpf);
-//    int editarAssociado(String cpf, NovoNomeStatusDomain body);
-    int criarAssociado(AssociadoDomain associadoDomain);
-//    int apagarAssociado(String cpf);
+    int editarAssociado(String cpf, NovoNomeStatusDomain body);
+    Optional<Integer> criarAssociado(AssociadoDomain associadoDomain);
+    int apagarAssociado(String cpf);
 
 }

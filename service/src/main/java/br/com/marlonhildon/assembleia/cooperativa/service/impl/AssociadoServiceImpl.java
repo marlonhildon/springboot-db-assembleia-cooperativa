@@ -2,11 +2,14 @@ package br.com.marlonhildon.assembleia.cooperativa.service.impl;
 
 import br.com.marlonhildon.assembleia.cooperativa.domain.AssociadoDomain;
 import br.com.marlonhildon.assembleia.cooperativa.domain.NovoNomeStatusDomain;
+import br.com.marlonhildon.assembleia.cooperativa.exception.AssociadoException;
+import br.com.marlonhildon.assembleia.cooperativa.exception.erroenum.AssociadoErroEnum;
 import br.com.marlonhildon.assembleia.cooperativa.repository.AssociadoRepository;
 import br.com.marlonhildon.assembleia.cooperativa.service.AssociadoService;
+import br.com.marlonhildon.assembleia.cooperativa.util.ValidacaoAssociadoUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jdbi.v3.core.JdbiException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,36 +22,51 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AssociadoServiceImpl implements AssociadoService {
 
-    private AssociadoRepository associadoRepository;
+    private final AssociadoRepository associadoRepository;
+    private final ValidacaoAssociadoUtil validacaoAssociadoUtil;
 
     @Override
     public void apagarAssociado(String cpf) {
-        log.info("Inicio do service de apagar associado");
+        try {
+            log.info("Inicio do service de apagar associado");
+            validacaoAssociadoUtil.validarAtualizacaoAssociado(associadoRepository.apagarAssociado(cpf));
+        } catch(JdbiException exception) {
+            throw new AssociadoException(AssociadoErroEnum.ASSOCIADO_ERRO_INTERNO_BD, exception);
+        }
     }
 
     @Override
     public AssociadoDomain criarAssociado(AssociadoDomain body) {
-        log.info("Inicio do service de criar associado");
-        int chaveGeradaAssociadoDomain = associadoRepository.criarAssociado(body);
-        body.setId(chaveGeradaAssociadoDomain);
-        log.debug("Chave gerada do novo associado: {}", chaveGeradaAssociadoDomain);
-        return body;
+        try {
+            log.info("Inicio do service de criar associado");
+            Optional<Integer> chaveGeradaAssociadoDomain = associadoRepository.criarAssociado(body);
+            body.setId(chaveGeradaAssociadoDomain.orElseThrow(() -> new AssociadoException(AssociadoErroEnum.ASSOCIADO_JA_EXISTE)));
+            return body;
+        } catch(JdbiException exception) {
+            throw new AssociadoException(AssociadoErroEnum.ASSOCIADO_ERRO_INTERNO_BD, exception);
+        }
+
+
     }
 
     @Override
     public void editarAssociado(String cpf, NovoNomeStatusDomain body) {
+        try {
         log.info("Inicio do service de editar associado");
+        validacaoAssociadoUtil.validarAtualizacaoAssociado(associadoRepository.editarAssociado(cpf, body));
+        } catch(JdbiException exception) {
+            throw new AssociadoException(AssociadoErroEnum.ASSOCIADO_ERRO_INTERNO_BD, exception);
+        }
     }
 
     @Override
     public AssociadoDomain obterAssociado(String cpf) {
-        log.info("Inicio do service de obter associado");
-        Optional<AssociadoDomain> associadoObtido = associadoRepository.obterAssociado(cpf);
-
-        if(associadoObtido.isPresent()) {
-            return associadoObtido.get();
-        } else {
-            throw new RuntimeException("Associado não encontrado"); //TODO: criar padrão de exceções + exceção customizada
+        try {
+            log.info("Inicio do service de obter associado");
+            Optional<AssociadoDomain> associadoObtido = associadoRepository.obterAssociado(cpf);
+            return associadoObtido.orElseThrow(()->new AssociadoException(AssociadoErroEnum.ASSOCIADO_NAO_ENCONTRADO));
+        } catch(JdbiException exception) {
+            throw new AssociadoException(AssociadoErroEnum.ASSOCIADO_ERRO_INTERNO_BD, exception);
         }
     }
 }
