@@ -18,6 +18,74 @@
 ### Tabelas MySQL usadas e seus relacionamentos
 ![Endpoints](https://drive.google.com/uc?export=view&id=1PkMjxVtV17fKK23NnLvSXoyei94h5mT3)
 
+### Procedure usada para criação do banco de dados e suas tabelas:
+```
+DROP PROCEDURE proc_database_tabelas_assembleia_cooperativista IF EXISTS;
+
+DELIMITER $$
+
+CREATE PROCEDURE `proc_database_tabelas_assembleia_cooperativista`()
+BEGIN
+    DECLARE `_rollback` BOOL DEFAULT 0;
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+    START TRANSACTION;
+    	
+		DROP DATABASE DBAssembleia IF EXISTS;
+		CREATE DATABASE DBAssembleia;
+	
+		DROP TABLE DBAssembleia.Associado IF EXISTS;
+		DROP TABLE DBAssembleia.Votacao IF EXISTS;
+		DROP TABLE DBAssembleia.SessaoPauta IF EXISTS;
+	
+		CREATE TABLE DBAssembleia.Associado(
+			id INT PRIMARY KEY AUTO_INCREMENT,
+			cpf VARCHAR(11) 				NOT NULL,
+			nome VARCHAR(255) 				NOT NULL,
+			flagAtivo CHAR(1) 				NOT NULL,
+			dataHoraInsercao DATETIME 		NOT NULL,
+			dataHoraAlteracao DATETIME,
+			nomeUsuarioAuditoria VARCHAR(50) NOT NULL,
+		
+			INDEX index_cpf_assoc(cpf),
+			CONSTRAINT constr_flagAtivo_assoc CHECK(flagAtivo IN ('S', 'N'))
+		);
+	
+		CREATE TABLE DBAssembleia.SessaoPauta(
+			id INT PRIMARY KEY AUTO_INCREMENT,
+			nomePauta VARCHAR(255) 			NOT NULL,
+			dataHoraInicioSessao DATETIME 	NOT NULL,
+			dataHoraFimSessao DATETIME 		NOT NULL,
+			nomeUsuarioAuditoria 			NOT NULL
+		);
+	
+		CREATE TABLE DBAssembleia.Votacao(
+			id INT PRIMARY KEY AUTO_INCREMENT,
+			idAssociado INT 					NOT NULL,
+			idSessaoVotacao INT 				NOT NULL,
+			flagVotoAssociado CHAR(1) 			NOT NULL,
+			dataHoraInsercao DATETIME 			NOT NULL,
+			nomeUsuarioAuditoria VARCHAR(255) 	NOT NULL,
+			
+			INDEX index_associado(idAssociado),
+			INDEX index_sessao_vot_assoc(idSessaoVotacao),
+			CONSTRAINT fk_idAssociado_votacao(idAssociado) REFERENCES Associado(id),
+			CONSTRAINT fk_idSessaoVotacao_votacao(idSessaoVotacao) REFERENCES SessaoPauta(id),
+			CONSTRAINT constr_flagVotoAssociado_votacao CHECK(flagVotoAssociado IN ('S', 'N'))
+		);
+   
+    IF `_rollback` THEN
+        ROLLBACK;
+    ELSE
+        COMMIT;
+    END IF;
+END$$
+
+DELIMITER ;
+
+CALL proc_database_tabelas_assembleia_cooperativista();
+DROP PROCEDURE proc_database_tabelas_assembleia_cooperativista;
+```
+
 ### Arquitetura planejada
 
 #### Cadastro de Associado
