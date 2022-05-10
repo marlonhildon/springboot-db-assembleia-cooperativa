@@ -2,8 +2,10 @@ package br.com.marlonhildon.assembleia.cooperativa.config;
 
 import br.com.marlonhildon.assembleia.cooperativa.repository.AssociadoRepository;
 import br.com.marlonhildon.assembleia.cooperativa.repository.SessaoPautaRepository;
+import br.com.marlonhildon.assembleia.cooperativa.repository.VotoRepository;
 import br.com.marlonhildon.assembleia.cooperativa.repository.impl.AssociadoRepositoryImpl;
 import br.com.marlonhildon.assembleia.cooperativa.repository.impl.SessaoPautaRepositoryImpl;
+import br.com.marlonhildon.assembleia.cooperativa.repository.impl.VotoRepositoryImpl;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.spi.JdbiPlugin;
@@ -46,5 +48,10 @@ public class JdbiConfig {
     @Bean
     public SessaoPautaRepository obterSessaoPautaRepositoryBean(Jdbi jdbi) {
         return jdbi.onDemand(SessaoPautaRepositoryImpl.class);
+    }
+
+    @Bean
+    public VotoRepository obterVotoRepositoryBean(Jdbi jdbi) {
+        return jdbi.onDemand(VotoRepositoryImpl.class);
     }
 }

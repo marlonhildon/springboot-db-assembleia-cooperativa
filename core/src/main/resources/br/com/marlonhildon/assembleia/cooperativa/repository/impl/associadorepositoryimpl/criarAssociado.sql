@@ -1,4 +1,4 @@
-INSERT INTO DBAssembleia.Associado(
+INSERT INTO Associado(
     nome,
     cpf,
     flagAtivo,
@@ -11,8 +11,9 @@ SELECT
     'S',
     CURRENT_TIMESTAMP(),
     'springboot-db-assembleia-cooperativa'
-FROM dual WHERE :associado.cpf NOT IN(
+FROM dual
+WHERE :associado.cpf NOT IN(
 	SELECT associado_cadastro.cpf
-	FROM DBAssembleia.Associado AS associado_cadastro
+	FROM Associado AS associado_cadastro
 	WHERE associado_cadastro.cpf = :associado.cpf
 );

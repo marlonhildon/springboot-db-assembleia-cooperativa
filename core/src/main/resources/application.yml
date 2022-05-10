@@ -10,7 +10,7 @@ spring:
     active: local
 
 ---
-
+# TODO: extrair usuário e senha de variável de ambiente do GCP.
 spring:
   config:
     activate:

@@ -225,7 +225,7 @@ paths:
           schema:
             $ref: "#/definitions/Erro"
 
-  /votos-apurados/{idSessaoPauta}:
+  /voto/apuracao/{idSessaoPauta}:
     get:
       tags:
       - "Votacao"
@@ -346,9 +346,6 @@ definitions:
       idSessaoPauta:
         type: integer
         description: "Número identificador da sessão aberta"
-      idPauta:
-        type: integer
-        description: "Número identificador da pauta"
       nomePauta:
         type: string
         description: "Nome da pauta com sessão aberta"
